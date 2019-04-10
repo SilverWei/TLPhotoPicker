@@ -81,11 +81,21 @@ public struct TLPhotosPickerConfigure {
     public var cameraCellNibSet: (nibName: String, bundle:Bundle)? = nil
     public var fetchCollectionTypes: [(PHAssetCollectionType,PHAssetCollectionSubtype)]? = nil
     public var groupByFetch: PHFetchedResultGroupedBy? = nil
+    public var darkMode: TLPhotosPickerDarkMode? = nil
     public init() {
         
     }
 }
 
+public struct TLPhotosPickerDarkMode {
+    public var backgroundColor: UIColor? = nil
+    public var textColor: UIColor? = nil
+    public var subTextColor: UIColor? = nil
+    
+    public init() {
+        
+    }
+}
 
 public struct Platform {
     
@@ -97,6 +107,7 @@ public struct Platform {
 
 
 open class TLPhotosPickerViewController: UIViewController {
+    @IBOutlet open var navigationBar: UINavigationBar!
     @IBOutlet open var titleView: UIView!
     @IBOutlet open var titleLabel: UILabel!
     @IBOutlet open var subTitleStackView: UIStackView!
@@ -257,6 +268,10 @@ open class TLPhotosPickerViewController: UIViewController {
         }
         return false
     }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return configure.darkMode != nil ? .lightContent : .default
+    }
 }
 
 // MARK: - UI & UI Action
@@ -311,8 +326,29 @@ extension TLPhotosPickerViewController {
         self.emptyMessageLabel.text = self.configure.emptyMessage
         self.albumPopView.tableView.delegate = self
         self.albumPopView.tableView.dataSource = self
-        self.popArrowImageView.image = TLBundle.podBundleImage(named: "pop_arrow")
         self.subTitleArrowImageView.image = TLBundle.podBundleImage(named: "arrow")
+        if let color = configure.darkMode?.backgroundColor {
+            self.popArrowImageView.image = TLBundle.podBundleImage(named: "pop_arrow")?.colorMask(color: color)
+            self.navigationBar.barTintColor = color
+            self.view.backgroundColor = color
+            self.albumPopView.tableView.backgroundColor = color
+            self.albumPopView.popupView.backgroundColor = color
+            self.collectionView.backgroundColor = color
+        }
+        else {
+            self.popArrowImageView.image = TLBundle.podBundleImage(named: "pop_arrow")
+        }
+
+        if let color = configure.darkMode?.textColor {
+            self.titleLabel.textColor = color
+            self.navigationBar.tintColor = color
+        }
+        if let color = configure.darkMode?.subTextColor {
+            self.subTitleLabel.textColor = color
+            self.albumPopView.tableView.separatorColor = color
+        }
+        
+        
         if #available(iOS 10.0, *), self.usedPrefetch {
             self.collectionView.isPrefetchingEnabled = true
             self.collectionView.prefetchDataSource = self
@@ -464,6 +500,22 @@ extension TLPhotosPickerViewController {
             self.updateTitle()
             self.reloadCollectionView()
         }
+    }
+}
+extension UIImage {
+    public func colorMask(color:UIColor) -> UIImage {
+        var result: UIImage?
+        let rect = CGRect(x:0, y:0, width:size.width, height:size.height)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, scale)
+        if let c = UIGraphicsGetCurrentContext() {
+            self.draw(in: rect)
+            c.setFillColor(color.cgColor)
+            c.setBlendMode(.sourceAtop)
+            c.fill(rect)
+            result = UIGraphicsGetImageFromCurrentImageContext()
+        }
+        UIGraphicsEndImageContext()
+        return result ?? self
     }
 }
 
@@ -1059,6 +1111,17 @@ extension TLPhotosPickerViewController: UITableViewDelegate,UITableViewDataSourc
         }
         cell.accessoryType = getfocusedIndex() == indexPath.row ? .checkmark : .none
         cell.selectionStyle = .none
+        
+        if let color = configure.darkMode?.backgroundColor {
+            cell.backgroundColor = color
+        }
+        if let color = configure.darkMode?.textColor {
+            cell.titleLabel.textColor = color
+            cell.tintColor = color
+        }
+        if let color = configure.darkMode?.subTextColor {
+            cell.subTitleLabel.textColor = color
+        }
         return cell
     }
 }

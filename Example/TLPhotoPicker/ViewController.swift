@@ -24,6 +24,11 @@ class ViewController: UIViewController,TLPhotosPickerViewControllerDelegate {
         }
         var configure = TLPhotosPickerConfigure()
         configure.numberOfColumn = 3
+        var darkMode = TLPhotosPickerDarkMode()
+        darkMode.backgroundColor = UIColor(red:0.17, green:0.27, blue:0.61, alpha:1.0)
+        darkMode.textColor = UIColor(red:0.86, green:0.91, blue:0.98, alpha:1.0)
+        darkMode.subTextColor = UIColor(red:0.62, green:0.72, blue:0.91, alpha:1.0)
+        configure.darkMode = darkMode
         viewController.configure = configure
         viewController.selectedAssets = self.selectedAssets
         viewController.logDelegate = self

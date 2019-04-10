@@ -70,6 +70,7 @@ open class TLAlbumPopView: UIView,PopupViewProtocol {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapBgView))
         self.bgView.addGestureRecognizer(tapGesture)
         self.tableView.register(UINib(nibName: "TLCollectionTableViewCell", bundle: Bundle(for: TLCollectionTableViewCell.self)), forCellReuseIdentifier: "TLCollectionTableViewCell")
+        
     }
     
     @objc func tapBgView() {
