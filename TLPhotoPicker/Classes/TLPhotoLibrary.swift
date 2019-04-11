@@ -128,7 +128,7 @@ class TLPhotoLibrary {
         _ = PHCachingImageManager().requestImageData(for: asset, options: options) { (imageData, dataUTI, orientation, info) in
             data = imageData
         }
-        return nil
+        return data
     }
 }
 
