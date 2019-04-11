@@ -124,8 +124,9 @@ class TLPhotoLibrary {
         options.resizeMode = .none
         options.isNetworkAccessAllowed = false
         options.version = .current
+        var data: Data? = nil
         _ = PHCachingImageManager().requestImageData(for: asset, options: options) { (imageData, dataUTI, orientation, info) in
-            return imageData
+            data = imageData
         }
         return nil
     }
