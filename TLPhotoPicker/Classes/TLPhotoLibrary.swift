@@ -102,7 +102,7 @@ class TLPhotoLibrary {
     }
     
     @discardableResult
-    class func fullResolutionImage(asset: PHAsset) -> UIImage? {
+    class func fullResolutionImageData(asset: PHAsset) -> UIImage? {
         let options = PHImageRequestOptions()
         options.isSynchronous = true
         options.resizeMode = .none
@@ -115,20 +115,6 @@ class TLPhotoLibrary {
             }
         }
         return image
-    }
-    
-    @discardableResult
-    class func fullResolutionData(asset: PHAsset) -> Data? {
-        let options = PHImageRequestOptions()
-        options.isSynchronous = true
-        options.resizeMode = .none
-        options.isNetworkAccessAllowed = false
-        options.version = .current
-        var data: Data? = nil
-        _ = PHCachingImageManager().requestImageData(for: asset, options: options) { (imageData, dataUTI, orientation, info) in
-            data = imageData
-        }
-        return data
     }
 }
 
