@@ -45,14 +45,7 @@ public struct TLPHAsset {
     public var fullResolutionImage: UIImage? {
         get {
             guard let phAsset = self.phAsset else { return nil }
-            return TLPhotoLibrary.fullResolutionImage(asset: phAsset)
-        }
-    }
-    
-    public var fullResolutionData: Data? {
-        get {
-            guard let phAsset = self.phAsset else { return nil }
-            return TLPhotoLibrary.fullResolutionData(asset: phAsset)
+            return TLPhotoLibrary.fullResolutionImageData(asset: phAsset)
         }
     }
     
